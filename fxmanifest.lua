@@ -6,7 +6,7 @@ version "1.0.0"
 
 dependencies {
     "PolyZone",
-    "qb-target",
+    "qb-target"
 }
 
 client_scripts {

@@ -1,5 +1,5 @@
 local QBCore = exports["qb-core"]:GetCoreObject();
-RegisterNetEvent("ct-fishing:client:FishingRod", function()
+RegisterNetEvent("ct-fishing:client:UseFishingRod", function()
     if not QBCore.Functions.HasItem("fishingrod") then
         QBCore.Functions.Notify("Hmm.. How you trying to fish without a rod?", "error", 2500)
         QBCore.Functions.Notify("!Admin Notified!", "error", 2500)
@@ -39,7 +39,8 @@ CreateThread(function()
         
         zones[nextZone].inOut = zone.inOut
         zones[nextZone].fish = zone.fish
-        zones[nextZone].animation = zone.animation
+        zones[nextZone].game = zone.game
+        zones[nextZone].reward = zone.reward
         
         Shared.FishingZones[zones[nextZone].name] = zones[nextZone]
     end

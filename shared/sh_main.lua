@@ -46,39 +46,80 @@ Shared.FishingZoneConfigs = {
                 Shared.isFishing = true
                 QBCore.Functions.Notify("\"You ARE a real musician\"", "primary", 2500)
                 local fishingRod = Shared.DefaultFishing.generateFishingRod()
-                if Shared.currentZone then
-                    Shared.currentZone.animation()
-                end
 
-                TriggerServerEvent("ct-fishing:server:RemoveBait:bass")
-                
-                Wait(3000)
-                if fishingRod then DeleteObject(fishingRod) end
-                Shared.isFishing = false
+                print(Shared.currentZone)
+
+                if Shared.currentZone then
+                    Shared.currentZone.game(function()
+                        if fishingRod then DeleteObject(fishingRod) end
+                        Shared.isFishing = false
+                        TriggerServerEvent("ct-fishing:server:RemoveBait:bass")
+                    end)
+                end
             else
                 QBCore.Functions.Notify("No bait, no date!", "error", 2500)
             end
         end,
-        animation = function()
-            RequestAnimDict("mini@tennis")
-            LoadAnimDict("mini@tennis")
+        game = function(cb)
+            RequestAnimDict("anim@mp_player_intupperslow_clap")
 
-            while not HasAnimDictLoaded("mini@tennis") do Wait(0) end
+            while not HasAnimDictLoaded("anim@mp_player_intupperslow_clap") do Wait(0) end
             
             TaskPlayAnim(
-                PlayerPedId(), 'mini@tennis',
-                'forehand_ts_md_far',
+                PlayerPedId(), 'anim@mp_player_intupperslow_clap',
+                'idle_a',
                 8.0,   -- blendInSpeed
                 8.0,   -- blendOutSpeed
                 -1,    -- duration
-                0,     -- flag
-                0,     -- playbackRate
+                1,     -- flag
+                1,     -- playbackRate
                 false, -- lockX
                 false, -- lockY
                 true   -- lockZ
             )
+
+            Wait(math.random(2,4)*1000)            
+            
+            exports['ps-ui']:Circle(function(success)
+                if success then
+                    QBCore.Functions.Notify(
+                        "You hear splashing...",
+                        "primary",
+                        3000
+                    )
+                    TriggerServerEvent("ct-fishing:server:GiveReward", Shared.currentZone.reward())
+                else
+                    QBCore.Functions.Notify(
+                        "You weren't convincing enough!",
+                        "error",
+                        3000
+                    )
+                end
+            end, 3, 20) -- NumberOfCircles, MS
+            
+            ClearPedTasks(PlayerPedId())
+            cb()
         end,
         reward = function()
+            math.randomseed(GetClockMonth()*GetClockHours()/GetClockSeconds())
+            local roll = math.random()
+            local rewards = {}
+            local dropRates = {
+                {40, "bassfishnote"},
+                {90, "bassfish"}
+            }
+            
+            for k, item in pairs(dropRates) do
+                if #rewards >= 2 then return rewards end
+
+                local numToSucceed = 1 - (item[1]/100)
+
+                if roll >= numToSucceed then
+                    table.insert(rewards, item[2])
+                end
+            end
+            
+            return rewards
         end,
     },
 }
