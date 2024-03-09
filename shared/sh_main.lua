@@ -18,111 +18,6 @@ function Dump(o)
     end
 end
 
-Shared.FishingZoneConfigs = {
-    [1] = {
-        poly_type = "circle",
-        config = {
-            center = vector3(1463.58, 4298.59, 30.86),
-            radius = 1.0,
-            options = {
-                name = "normal_fishing",
-                debugPoly = true,
-                debugColor = { 0, 255, 0 },
-            },
-        },
-        inOut = function(isPointInside, point, zone)
-            if isPointInside then
-                exports["qb-core"]:DrawText("Shout a compliment")
-                Shared.currentZone = zone
-                Shared.canFish = true
-            else
-                exports["qb-core"]:HideText()
-                Shared.currentZone = zone
-                Shared.canFish = false
-            end
-        end,
-        fish = function()
-            if (QBCore.Functions.HasItem("bassfishbait")) then
-                Shared.isFishing = true
-                QBCore.Functions.Notify("\"You ARE a real musician\"", "primary", 2500)
-                local fishingRod = Shared.DefaultFishing.generateFishingRod()
-
-                print(Shared.currentZone)
-
-                if Shared.currentZone then
-                    Shared.currentZone.game(function()
-                        if fishingRod then DeleteObject(fishingRod) end
-                        Shared.isFishing = false
-                        TriggerServerEvent("ct-fishing:server:RemoveBait:bass")
-                    end)
-                end
-            else
-                QBCore.Functions.Notify("No bait, no date!", "error", 2500)
-            end
-        end,
-        game = function(cb)
-            RequestAnimDict("anim@mp_player_intupperslow_clap")
-
-            while not HasAnimDictLoaded("anim@mp_player_intupperslow_clap") do Wait(0) end
-            
-            TaskPlayAnim(
-                PlayerPedId(), 'anim@mp_player_intupperslow_clap',
-                'idle_a',
-                8.0,   -- blendInSpeed
-                8.0,   -- blendOutSpeed
-                -1,    -- duration
-                1,     -- flag
-                1,     -- playbackRate
-                false, -- lockX
-                false, -- lockY
-                true   -- lockZ
-            )
-
-            Wait(math.random(2,4)*1000)            
-            
-            exports['ps-ui']:Circle(function(success)
-                if success then
-                    QBCore.Functions.Notify(
-                        "You hear splashing...",
-                        "primary",
-                        3000
-                    )
-                    TriggerServerEvent("ct-fishing:server:GiveReward", Shared.currentZone.reward())
-                else
-                    QBCore.Functions.Notify(
-                        "You weren't convincing enough!",
-                        "error",
-                        3000
-                    )
-                end
-            end, 3, 20) -- NumberOfCircles, MS
-            
-            ClearPedTasks(PlayerPedId())
-            cb()
-        end,
-        reward = function()
-            math.randomseed(GetClockMonth()*GetClockHours()/GetClockSeconds())
-            local roll = math.random()
-            local rewards = {}
-            local dropRates = {
-                {40, "bassfishnote"},
-                {90, "bassfish"}
-            }
-            
-            for k, item in pairs(dropRates) do
-                if #rewards >= 2 then return rewards end
-
-                local numToSucceed = 1 - (item[1]/100)
-
-                if roll >= numToSucceed then
-                    table.insert(rewards, item[2])
-                end
-            end
-            
-            return rewards
-        end,
-    },
-}
 Shared.DefaultFishing = {
     inOut = function(isPointInside, point, zone)
         print("isPointInside2", isPointInside)
@@ -179,4 +74,110 @@ Shared.DefaultFishing = {
         SetModelAsNoLongerNeeded(fishingRodHash)
         return fishingRod
     end
+}
+
+Shared.FishingZoneConfigs = {
+    [1] = {
+        poly_type = "circle",
+        config = {
+            center = vector3(1463.58, 4298.59, 30.86),
+            radius = 1.0,
+            options = {
+                name = "normal_fishing",
+                debugPoly = true,
+                debugColor = { 0, 255, 0 },
+            },
+        },
+        inOut = function(isPointInside, point, zone)
+            if isPointInside then
+                exports["qb-core"]:DrawText("Shout a compliment")
+                Shared.currentZone = zone
+                Shared.canFish = true
+            else
+                exports["qb-core"]:HideText()
+                Shared.currentZone = zone
+                Shared.canFish = false
+            end
+        end,
+        fish = function()
+            if (QBCore.Functions.HasItem("bassfishbait")) then
+                Shared.isFishing = true
+                QBCore.Functions.Notify("\"You ARE a real musician\"", "primary", 2500)
+                local fishingRod = Shared.DefaultFishing.generateFishingRod()
+
+                print(Shared.currentZone)
+
+                if Shared.currentZone then
+                    Shared.currentZone.game(function()
+                        if fishingRod then DeleteObject(fishingRod) end
+                        Shared.isFishing = false
+                        TriggerServerEvent("ct-fishing:server:RemoveBait:bass")
+                    end)
+                end
+            else
+                QBCore.Functions.Notify("No bait, no date!", "error", 2500)
+            end
+        end,
+        game = function(cb)
+            RequestAnimDict("anim@mp_player_intupperslow_clap")
+
+            while not HasAnimDictLoaded("anim@mp_player_intupperslow_clap") do Wait(0) end
+
+            TaskPlayAnim(
+                PlayerPedId(), 'anim@mp_player_intupperslow_clap',
+                'idle_a',
+                8.0,   -- blendInSpeed
+                8.0,   -- blendOutSpeed
+                -1,    -- duration
+                1,     -- flag
+                1,     -- playbackRate
+                false, -- lockX
+                false, -- lockY
+                true   -- lockZ
+            )
+
+            Wait(math.random(2, 4) * 1000)
+
+            exports['ps-ui']:Circle(function(success)
+                if success then
+                    QBCore.Functions.Notify(
+                        "You hear splashing...",
+                        "primary",
+                        3000
+                    )
+                    TriggerServerEvent("ct-fishing:server:GiveReward", Shared.currentZone.reward())
+                else
+                    QBCore.Functions.Notify(
+                        "You weren't convincing enough!",
+                        "error",
+                        3000
+                    )
+                end
+            end, 3, 20) -- NumberOfCircles, MS
+
+            ClearPedTasks(PlayerPedId())
+            cb()
+        end,
+        reward = function()
+            math.randomseed(GetClockMonth() * GetClockHours() / GetClockSeconds())
+            local roll = math.random()
+            local rewards = {}
+            local dropRates = {
+                { 40, "bassfishnote" },
+                { 90, "bassfish" }
+            }
+
+            for k, item in pairs(dropRates) do
+                if #rewards >= 2 then return rewards end
+
+                local numToSucceed = 1 - (item[1] / 100)
+
+                if roll >= numToSucceed then
+                    table.insert(rewards, item[2])
+                end
+            end
+
+            return rewards
+        end,
+    },
 }
