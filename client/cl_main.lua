@@ -41,6 +41,10 @@ CreateThread(function()
         zones[nextZone].fish = zone.fish
         zones[nextZone].game = zone.game
         zones[nextZone].reward = zone.reward
+
+        if zone.zone_setup then
+            zone.zone_setup()
+        end
         
         Shared.FishingZones[zones[nextZone].name] = zones[nextZone]
     end

@@ -1,6 +1,7 @@
 local QBCore = exports["qb-core"]:GetCoreObject()
 Shared = {} or Shared
 Shared.FishingZones = {}
+Shared.ZoneProps = {}
 Shared.currentZone = nil
 Shared.canFish = false
 Shared.isFishing = false
@@ -160,7 +161,8 @@ Shared.FishingZoneConfigs = {
             cb()
         end,
         reward = function()
-            math.randomseed(GetClockMonth() * GetClockHours() / GetClockSeconds())
+            local year, month, day, hour, minute, second = GetUtcTime()
+            math.randomseed((year * month / second) + ((minute - day) * second) + hour)
             local roll = math.random()
             local rewards = {}
             local dropRates = {
@@ -224,13 +226,13 @@ Shared.FishingZoneConfigs = {
             end
         end,
         game = function(cb)
-            RequestAnimDict("anim@mp_player_intupperslow_clap")
+            RequestAnimDict("mini@dartsoutro")
 
-            while not HasAnimDictLoaded("anim@mp_player_intupperslow_clap") do Wait(0) end
+            while not HasAnimDictLoaded("mini@dartsoutro") do Wait(0) end
 
             TaskPlayAnim(
-                PlayerPedId(), 'anim@mp_player_intupperslow_clap',
-                'idle_a',
+                PlayerPedId(), 'mini@dartsoutro',
+                'darts_outro_01_guy2',
                 8.0,   -- blendInSpeed
                 8.0,   -- blendOutSpeed
                 -1,    -- duration
@@ -264,7 +266,8 @@ Shared.FishingZoneConfigs = {
             cb()
         end,
         reward = function()
-            math.randomseed(GetClockMonth() * GetClockHours() / GetClockSeconds())
+            local year, month, day, hour, minute, second = GetUtcTime()
+            math.randomseed((year * month / second) + ((minute - day) * second) + hour)
             local roll = math.random()
             local rewards = {}
             local dropRates = {
@@ -289,7 +292,7 @@ Shared.FishingZoneConfigs = {
     [3] = {
         poly_type = "circle",
         config = {
-            center = vector3(-603.59, -122.29, 338.32),
+            center = vector3(899.46, 36.64, 111.32),
             radius = 1.0,
             options = {
                 name = "fly_fishing",
@@ -328,13 +331,13 @@ Shared.FishingZoneConfigs = {
             end
         end,
         game = function(cb)
-            RequestAnimDict("anim@mp_player_intupperslow_clap")
+            RequestAnimDict("missfam2_pier")
 
-            while not HasAnimDictLoaded("anim@mp_player_intupperslow_clap") do Wait(0) end
+            while not HasAnimDictLoaded("missfam2_pier") do Wait(0) end
 
             TaskPlayAnim(
-                PlayerPedId(), 'anim@mp_player_intupperslow_clap',
-                'idle_a',
+                PlayerPedId(), 'missfam2_pier',
+                'pier_lean_toss_cigarette',
                 8.0,   -- blendInSpeed
                 8.0,   -- blendOutSpeed
                 -1,    -- duration
@@ -357,7 +360,7 @@ Shared.FishingZoneConfigs = {
                     TriggerServerEvent("ct-fishing:server:GiveReward", Shared.currentZone.reward())
                 else
                     QBCore.Functions.Notify(
-                        "You sound like a Windows user",
+                        "You sound like new money",
                         "error",
                         3000
                     )
@@ -368,7 +371,8 @@ Shared.FishingZoneConfigs = {
             cb()
         end,
         reward = function()
-            math.randomseed(GetClockMonth() * GetClockHours() / GetClockSeconds())
+            local year, month, day, hour, minute, second = GetUtcTime()
+            math.randomseed((year * month / second) + ((minute - day) * second) + hour)
             local roll = math.random()
             local rewards = {}
             local dropRates = {
@@ -381,6 +385,8 @@ Shared.FishingZoneConfigs = {
 
                 local numToSucceed = 1 - (item[1] / 100)
 
+                print(roll)
+
                 if roll >= numToSucceed then
                     table.insert(rewards, item[2])
                 end
@@ -389,7 +395,23 @@ Shared.FishingZoneConfigs = {
             return rewards
         end,
         zone_setup = function()
+            local modelHash = "hei_p_attache_case_shut"
+            local model
+
+            RequestModel(modelHash)
+            while not HasModelLoaded(modelHash) do
+                Wait(0)
+            end
             
+            print("Hello?")
+
+            model = CreateObject(modelHash, 898.4, 36.3, 111.1, false, false, false)
+            
+            Shared.ZoneProps["fly_fishing"] = {model}
+            
+            FreezeEntityPosition(model, true)
+            SetEntityInvincible(model, true)
+            SetBlockingOfNonTemporaryEvents(model, true)
         end,
     }
 }
