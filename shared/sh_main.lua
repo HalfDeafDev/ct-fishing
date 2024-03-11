@@ -324,7 +324,7 @@ Shared.FishingZoneConfigs = {
                     end)
                 end
             else
-                QBCore.Functions.Notify("No bait, no date!", "error", 2500)
+                QBCore.Functions.Notify("They don't work with the poor..", "error", 2500)
             end
         end,
         game = function(cb)
