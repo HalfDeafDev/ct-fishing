@@ -28,7 +28,7 @@ local removeItem = function(source, item)
     if didRemove then
         TriggerClientEvent("inventory:client:ItemBox",
         playerSource,
-        QBCore.Shared.Items["bassfishbait"], 'remove'
+        QBCore.Shared.Items[item], 'remove'
     )
     end
 end
@@ -44,6 +44,14 @@ end
 
 RegisterNetEvent("ct-fishing:server:RemoveBait:bass", function()
     removeItem(source, "bassfishbait")
+end)
+
+RegisterNetEvent("ct-fishing:server:RemoveBait:dork", function()
+    removeItem(source, "dorkfishbait")
+end)
+
+RegisterNetEvent("ct-fishing:server:RemoveBait:fly", function()
+    removeItem(source, "flyfishbait")
 end)
 
 RegisterNetEvent("ct-fishing:server:GiveReward", function(rewards)
