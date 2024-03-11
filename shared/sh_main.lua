@@ -353,7 +353,7 @@ Shared.FishingZoneConfigs = {
             exports['ps-ui']:Circle(function(success)
                 if success then
                     QBCore.Functions.Notify(
-                        "You hear splashing...",
+                        "You hear something smug approaching...", 
                         "primary",
                         3000
                     )
