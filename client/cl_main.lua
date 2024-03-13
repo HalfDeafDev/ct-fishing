@@ -24,6 +24,7 @@ RegisterNetEvent("ct-fishing:client:UseFishingRod", function()
     end
 end)
 
+
 CreateThread(function()
     local zones = {}
     
