@@ -17,10 +17,12 @@ client_scripts {
     "client/cl_main.lua",
 }
 
-shared_scripts {
-    "shared/sh_main.lua",
-}
-
 server_scripts {
     "server/sv_main.lua"
+}
+
+shared_scripts {
+    "helpers.lua",
+    "shared/sh_main.lua",
+    "shared/fishing_zone_configs.lua",
 }
