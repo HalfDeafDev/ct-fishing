@@ -14,10 +14,13 @@ client_scripts {
     "@PolyZone/BoxZone.lua",
     "@PolyZone/CircleZone.lua",
     "@PolyZone/ComboZone.lua",
+    "client/cl_shop.lua",
     "client/cl_main.lua",
 }
 
 server_scripts {
+    "server/sv_helpers.lua",
+    "server/sv_shop.lua",
     "server/sv_main.lua"
 }
 

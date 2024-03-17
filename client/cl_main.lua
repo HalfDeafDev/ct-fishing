@@ -21,7 +21,32 @@ RegisterNetEvent("ct-fishing:client:UseFishingRod", function()
     end
 end)
 
+RegisterNetEvent("ct-fishing:client:UseAntiTriFish", function()
+    if not QBCore.Functions.HasItem("antitrifish") then
+        QBCore.Functions.Notify("You've got no idea what to do", "error", 2500)
+        return
+    end
 
+    if Shared.atfInUse then
+        QBCore.Functions.Notify("No reason to use it again!", "error", 2500)
+        return
+    else
+        QBCore.Functions.Notify("There was a shift in the aquaforce", "primary", 2500)
+        local shopkeeper = FishShop.spawn()
+        local indicator = FishShop.buildProps()
+        CreateThread(function()
+            Wait(10000)
+            DeleteEntity(shopkeeper)
+            DeleteEntity(indicator)
+            TriggerEvent("qb-menu:client:closeMenu")
+            QBCore.Functions.Notify("The aquaforce is back to normal", "primary", 2500)
+            Shared.atfInUse = false
+        end)
+        Shared.atfInUse = true
+    end
+end)
+
+-- Generate Fishing Zones from Configs
 CreateThread(function()
     local zones = {}
 
@@ -58,6 +83,3 @@ CreateThread(function()
         end
     end)
 end)
-
-print("client script loaded, Shared Object: ")
-print(Shared)

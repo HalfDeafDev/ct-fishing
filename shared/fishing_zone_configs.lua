@@ -309,8 +309,6 @@ table.insert(Shared.FishingZoneConfigs, {
 
             local numToSucceed = 1 - (item[1] / 100)
 
-            print(roll)
-
             if roll >= numToSucceed then
                 table.insert(rewards, item[2])
             end
@@ -338,6 +336,3 @@ table.insert(Shared.FishingZoneConfigs, {
         SetBlockingOfNonTemporaryEvents(model, true)
     end,
 })
-
-print("zone configs loaded, Shared Object: ")
-print(Shared)

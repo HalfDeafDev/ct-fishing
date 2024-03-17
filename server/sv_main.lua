@@ -1,18 +1,5 @@
 local QBCore = exports["qb-core"]:GetCoreObject();
 
-function Dump(o)
-    if type(o) == 'table' then
-        local s = '{ \n'
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '[' .. k .. '] = ' .. Dump(v) .. ',\n'
-        end
-        return s .. '} \n'
-    else
-        return tostring(o)
-    end
-end
-
 local removeItem = function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
     if not Player then return end
@@ -59,8 +46,6 @@ RegisterNetEvent("ct-fishing:server:GiveReward", function(rewards)
     local Player = QBCore.Functions.GetPlayer(source)
     if not Player then return end
     
-    print(Dump(rewards))
-    
     for k, reward in ipairs(rewards) do
         addItem(source, reward)
     end
@@ -70,4 +55,11 @@ QBCore.Functions.CreateUseableItem("fishingrod", function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
     if not Player.Functions.GetItemByName(item.name) then return end
     TriggerClientEvent("ct-fishing:client:UseFishingRod", source)
+end)
+
+QBCore.Functions.CreateUseableItem("antitrifish", function(source, item)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if not Player.Functions.GetItemByName(item.name) then return end
+    print("Called AntiTriFish")
+    TriggerClientEvent("ct-fishing:client:UseAntiTriFish", source)
 end)

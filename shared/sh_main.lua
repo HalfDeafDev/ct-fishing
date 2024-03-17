@@ -1,11 +1,13 @@
 local QBCore = exports["qb-core"]:GetCoreObject()
 
 Shared = {} or Shared
+Shared.FishingZoneConfigs = {}
 Shared.FishingZones = {}
 Shared.currentZone = nil
+
 Shared.canFish = false
 Shared.isFishing = false
-Shared.FishingZoneConfigs = {}
+Shared.atfInUse = false
 
 Shared.DefaultFishing = {
     inOut = function(isPointInside, point, zone)
@@ -64,6 +66,3 @@ Shared.DefaultFishing = {
         return fishingRod
     end
 }
-
-print("sh_main loaded, Shared Object: ")
-print(Shared)
